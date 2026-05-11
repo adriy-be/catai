@@ -100,11 +100,18 @@ export async function createCategoryEntryRepo() {
         });
     }
 
-    const Database = await import("better-sqlite3");
+    const BetterSqlite3Module = await import("better-sqlite3");
+
+    // @ts-ignore - better-sqlite3 default export typing issue
+    const Database = BetterSqlite3Module.default;
+
+    const sqlite = new Database(process.env.SQLITE_PATH ?? "./local.db");
+
+
     const { drizzle } = await import("drizzle-orm/better-sqlite3");
     const schema = await import("./schema.sqlite");
 
-    const sqlite = new Database(process.env.SQLITE_PATH ?? "./local.db");
+
     const db = drizzle({ client: sqlite, schema });
 
     return buildRepo({

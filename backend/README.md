@@ -4,11 +4,22 @@ Welcome to your new [Mastra](https://mastra.ai/) project! We're excited to see w
 
 ## Getting Started
 
-Set your OpenRouter key in `.env`:
+Set your model provider key in `.env`.
+
+Default setup (OpenRouter):
 
 ```shell
-OPENROUTER_API_KEY=your-api-key
+OPENROUTER_API_KEY=sk-or-...
+CATAI_MODEL=openrouter/deepseek-ai/DeepSeek-V3.2
 ```
+
+If you use a different provider, set `CATAI_MODEL` accordingly and provide the matching API key:
+
+- `openai/...` requires `OPENAI_API_KEY`
+- `anthropic/...` requires `ANTHROPIC_API_KEY`
+- `groq/...` requires `GROQ_API_KEY`
+
+If you see `401 User not found` with OpenRouter, your `OPENROUTER_API_KEY` is usually invalid/revoked or not an OpenRouter key.
 
 Agent models can use OpenRouter directly with this format:
 

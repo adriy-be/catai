@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "mastra dev",
-    "build": "mastra build",
-    "start": "mastra start"
+    "init-db": "tsx ./src/scripts/init-db.ts",
+    "dev": "npm run init-db && node --env-file=.env ./node_modules/mastra/dist/index.js dev",
+    "build": "node --env-file=.env ./node_modules/mastra/dist/index.js build",
+    "start": "npm run init-db && node --env-file=.env ./node_modules/mastra/dist/index.js start"
   },
   "keywords": [],
   "author": "",
