@@ -1,0 +1,23 @@
+{
+  "name": "catai-vue-ts",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "Vue.volar",
+        "dbaeumer.vscode-eslint"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "typescript.tsdk": "frontend/node_modules/typescript/lib"
+      }
+    }
+  },
+  "forwardPorts": [
+    5173
+  ],
+  "postCreateCommand": "set -e; cd backend && npm install; cd ../frontend && npm install",
+  "remoteUser": "node"
+}
