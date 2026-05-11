@@ -33,6 +33,10 @@ export const entries = sqliteTable("entry", {
     createdAt: text("created_at").notNull().default("CURRENT_TIMESTAMP"),
 });
 
+/**
+ * SQLite schema definition for categories and entries.
+ */
+
 export const categoryRelations = relations(categories, ({ many }) => ({
     entries: many(entries),
 }));

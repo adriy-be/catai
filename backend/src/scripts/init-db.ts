@@ -1,3 +1,7 @@
+
+/**
+ * Script to initialize the SQLite database and create required tables.
+ */
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 import * as schema from '../db/schema.sqlite';

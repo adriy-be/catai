@@ -1,3 +1,7 @@
+
+/**
+ * Scorers for weather-related agent evaluation: tool call appropriateness, completeness, and translation quality.
+ */
 import { z } from 'zod';
 import { createToolCallAccuracyScorerCode } from '@mastra/evals/scorers/prebuilt';
 import { createCompletenessScorer } from '@mastra/evals/scorers/prebuilt';

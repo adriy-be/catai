@@ -1,3 +1,7 @@
+
+/**
+ * Tool to write a validated entry for an existing category.
+ */
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 import { createCategoryEntryRepo } from "../../db/repo";

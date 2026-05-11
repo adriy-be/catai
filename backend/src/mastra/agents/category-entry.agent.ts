@@ -1,3 +1,7 @@
+
+/**
+ * Agent for extracting and storing structured category entries from user text.
+ */
 import { Agent } from "@mastra/core/agent";
 import { resolveCategoryTool } from "../tools/resolve-category.tool";
 import { writeEntryTool } from "../tools/write-entry.tool";

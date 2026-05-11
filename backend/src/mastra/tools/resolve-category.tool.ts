@@ -1,3 +1,7 @@
+
+/**
+ * Tool to resolve or create a category by name and type.
+ */
 import { createTool } from "@mastra/core/tools";
 import { z } from "zod";
 import { createCategoryEntryRepo } from "../../db/repo";

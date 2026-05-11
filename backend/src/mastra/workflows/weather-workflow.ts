@@ -10,6 +10,10 @@ const forecastSchema = z.object({
   location: z.string(),
 })
 
+/**
+ * Weather workflow and utility functions for weather condition handling.
+ */
+
 function getWeatherCondition(code: number): string {
   const conditions: Record<number, string> = {
     0: 'Clear sky',

@@ -1,3 +1,7 @@
+
+/**
+ * Model selection and credential validation for agent execution.
+ */
 import 'dotenv/config';
 
 const OPENROUTER_MODEL_PREFIX = 'openrouter/';

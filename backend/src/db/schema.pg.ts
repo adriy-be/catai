@@ -41,6 +41,10 @@ export const entries = pgTable("entry", {
     createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+/**
+ * PostgreSQL schema definition for categories and entries.
+ */
+
 export const categoryRelations = relations(categories, ({ many }) => ({
     entries: many(entries),
 }));

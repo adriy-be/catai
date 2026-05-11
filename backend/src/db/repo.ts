@@ -1,3 +1,7 @@
+
+/**
+ * Repository for category and entry operations, supporting both SQLite and PostgreSQL.
+ */
 import { eq, ilike, like } from "drizzle-orm";
 
 export type CategoryType = "numeric" | "bool" | "str";
@@ -32,24 +36,28 @@ function validateCategoryType(type: string): CategoryType {
     throw new Error(`Invalid category type: ${type}`);
 }
 
-function validateValue(category: any, rawValue: unknown): EntryValue {
+type Category = {
+    id: number;
+    name: string;
+    type: CategoryType;
+    numericMin?: number | null;
+    numericMax?: number | null;
+};
+
+function validateValue(category: Category, rawValue: unknown): EntryValue {
     const categoryType = validateCategoryType(category.type);
 
     if (categoryType === "numeric") {
         const value = Number(rawValue);
-
         if (!Number.isFinite(value)) {
             throw new Error(`Invalid numeric value: ${String(rawValue)}`);
         }
-
         if (category.numericMin != null && value < category.numericMin) {
             throw new Error(`Value ${value} is below min ${category.numericMin}`);
         }
-
         if (category.numericMax != null && value > category.numericMax) {
             throw new Error(`Value ${value} is above max ${category.numericMax}`);
         }
-
         return { type: "numeric", value };
     }
 
@@ -57,19 +65,15 @@ function validateValue(category: any, rawValue: unknown): EntryValue {
         if (typeof rawValue === "boolean") {
             return { type: "bool", value: rawValue };
         }
-
         if (typeof rawValue === "string") {
             const clean = rawValue.trim().toLowerCase();
-
             if (["true", "yes", "y", "1", "oui", "vrai", "done", "taken"].includes(clean)) {
                 return { type: "bool", value: true };
             }
-
             if (["false", "no", "n", "0", "non", "faux", "not done", "not taken"].includes(clean)) {
                 return { type: "bool", value: false };
             }
         }
-
         throw new Error(`Invalid bool value: ${String(rawValue)}`);
     }
 
@@ -121,18 +125,19 @@ export async function createCategoryEntryRepo() {
     });
 }
 
-function buildRepo(args: {
+interface RepoArgs {
     db: any;
-    schema: any;
+    schema: { categories: any; entries: any };
     dialect: "sqlite" | "pg";
-}) {
+}
+
+function buildRepo(args: RepoArgs) {
     const { db, schema, dialect } = args;
     const { categories, entries } = schema;
 
     return {
-        async findSimilarCategory(name: string) {
+        async findSimilarCategory(name: string): Promise<Category | null> {
             const normalized = normalizeName(name);
-
             const rows =
                 dialect === "pg"
                     ? await db
@@ -145,21 +150,19 @@ function buildRepo(args: {
                         .from(categories)
                         .where(like(categories.name, `%${normalized}%`))
                         .limit(1);
-
             return rows[0] ?? null;
         },
 
-        async getCategoryById(categoryId: number) {
+        async getCategoryById(categoryId: number): Promise<Category | null> {
             const rows = await db
                 .select()
                 .from(categories)
                 .where(eq(categories.id, categoryId))
                 .limit(1);
-
             return rows[0] ?? null;
         },
 
-        async createCategory(input: CategoryInput) {
+        async createCategory(input: CategoryInput): Promise<Category> {
             const rows = await db
                 .insert(categories)
                 .values({
@@ -169,40 +172,32 @@ function buildRepo(args: {
                     numericMax: input.numericMax ?? null,
                 })
                 .returning();
-
             return rows[0];
         },
 
-        async resolveCategory(input: CategoryInput) {
+        async resolveCategory(input: CategoryInput): Promise<{ category: Category; created: boolean }> {
             const existing = await this.findSimilarCategory(input.name);
-
             if (existing) {
                 return {
                     category: existing,
                     created: false,
                 };
             }
-
             const created = await this.createCategory(input);
-
             return {
                 category: created,
                 created: true,
             };
         },
 
-        async writeEntry(input: WriteEntryInput) {
+        async writeEntry(input: WriteEntryInput): Promise<{ category: Category; entry: any; typedValue: EntryValue }> {
             const category = await this.getCategoryById(input.categoryId);
-
             if (!category) {
                 throw new Error(`Category not found: ${input.categoryId}`);
             }
-
             const typedValue = validateValue(category, input.value);
-
             const dbValue =
                 dialect === "sqlite" ? JSON.stringify(typedValue) : typedValue;
-
             const rows = await db
                 .insert(entries)
                 .values({
@@ -211,7 +206,6 @@ function buildRepo(args: {
                     sourceText: input.sourceText ?? null,
                 })
                 .returning();
-
             return {
                 category,
                 entry: rows[0],

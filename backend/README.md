@@ -1,6 +1,20 @@
+
 # catai-back
 
-Welcome to your new [Mastra](https://mastra.ai/) project! We're excited to see what you'll build.
+
+Welcome to your [Mastra](https://mastra.ai/) backend project! This backend is structured for clarity, maintainability, and extensibility. The codebase has been refactored for type safety, modularity, and best practices.
+
+## Getting Started
+
+
+## Project Structure
+
+- `src/mastra/` — Main Mastra logic: agents, tools, workflows, scorers, and models
+- `src/db/` — Database schemas and repository logic (supports SQLite and PostgreSQL)
+- `src/scripts/` — Utility scripts (e.g., database initialization)
+- `drizzle.config.ts` — Drizzle ORM configuration
+
+All main files now include file-level docstrings for easier navigation and understanding.
 
 ## Getting Started
 
@@ -35,7 +49,18 @@ npm run dev
 
 Open [http://localhost:4111](http://localhost:4111) in your browser to access [Mastra Studio](https://mastra.ai/docs/studio/overview). It provides an interactive UI for building and testing your agents, along with a REST API that exposes your Mastra application as a local service. This lets you start building without worrying about integration right away.
 
+
 You can start editing files inside the `src/mastra` directory. The development server will automatically reload whenever you make changes.
+
+## Code Quality & Maintenance
+
+- All backend TypeScript files include file-level docstrings.
+- Type safety and explicit types are enforced throughout the codebase.
+- Repository logic is modular and supports both SQLite and PostgreSQL.
+- Tools and agents are documented and easy to extend.
+
+For further development, follow the established patterns for maintainability and clarity.
+
 
 ## Learn more
 

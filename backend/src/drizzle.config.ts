@@ -1,3 +1,7 @@
+
+/**
+ * drizzle-orm configuration for the project.
+ */
 import 'dotenv/config';
 
 export default {
